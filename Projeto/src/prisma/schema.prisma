@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id          String  @id @default(uuid())
+  id_telegram String  @unique
+  name        String?
+}
+
+model Session {
+  id         String    @id @default(uuid())
+  created_at DateTime
+  update_at  DateTime
+  messages   Message[]
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  type       String
+  content    String
+  sender     String
+  receiver   String
+  created_at DateTime
+  session    Session  @relation(fields: [sessionId], references: [id])
+  sessionId  String
+}
+
+datasource db {
+  provider = "sqlite"
+  url = env("DATABASE_URL")
+}
